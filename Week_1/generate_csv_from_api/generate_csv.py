@@ -12,19 +12,22 @@ CSV_FILE_NAME = "generated_metmuseum_objects_using_pandas.csv"
 
 
 def generate_csv():
-    object_list = get_flatten_object_list()
+    object_list = get_object_list()
     df = pd.DataFrame(object_list)
     df.to_csv(CSV_FILE_NAME, index=False)
 
 
-def get_flatten_object_list(entry_size=20):
+def get_object_list(entry_size=20, is_flatten=True):
     object_ids = get_object_ids(OBJECT_IDS_ENDPOINT)
     object_list = []
 
     for id in object_ids[:entry_size]:
         object_data = get_object_by_id(OBJECT_ENDPOINT, id)
-        flatten_object = flatten(object_data)
-        object_list.append(flatten_object)
+        if is_flatten:
+            flatten_object = flatten(object_data)
+            object_list.append(flatten_object)
+        else:
+            object_list.append(object_data)
 
     return object_list
 
