@@ -29,7 +29,6 @@ def get_flatten_object_list(entry_size=20):
     return object_list
 
 
-
 # return list of object ids from API
 def get_object_ids(api_endpoint):
     res = requests.get(api_endpoint)
@@ -48,4 +47,5 @@ def get_object_by_id(api_endpoint, id):
         return res_body
 
 
-generate_csv()
+if __name__ == "__main__":
+    generate_csv()
