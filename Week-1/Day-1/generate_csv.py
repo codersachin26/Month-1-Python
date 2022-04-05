@@ -13,6 +13,7 @@ CSV_FILE_NAME = "generated_metmuseum_objects_using_pandas.csv"
 
 def generate_csv(entry_size=20):
     object_ids = get_object_ids(OBJECT_IDS_ENDPOINT)
+    # storing list of metmuseum objects
     object_list = []
 
     for id in object_ids[:entry_size]:
