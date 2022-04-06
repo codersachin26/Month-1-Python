@@ -17,7 +17,7 @@ def generate_csv():
     df.to_csv(CSV_FILE_NAME, index=False)
 
 
-def get_object_list(entry_size=20, is_flatten=True):
+def get_object_list(entry_size=40, is_flatten=True):
     object_ids = get_object_ids(OBJECT_IDS_ENDPOINT)
     object_list = []
 
