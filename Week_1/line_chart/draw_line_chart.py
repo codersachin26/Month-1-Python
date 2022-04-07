@@ -3,7 +3,7 @@ import numpy as np
 import requests
 import json
 
-API_ENDPOINT = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=50&interval=daily"
+API_ENDPOINT = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=100&interval=daily"
 
 
 def draw_line_chart(data):
@@ -17,6 +17,7 @@ def draw_line_chart(data):
 def draw_btc_price_data():
     res = requests.get(API_ENDPOINT)
     btc_data = json.loads(res.text)
+    print(json.dumps(btc_data))
     btc_prices = []
 
     for price in btc_data.get('prices'):
@@ -25,7 +26,5 @@ def draw_btc_price_data():
     draw_line_chart(np.array(btc_prices))
 
 
-
 if __name__ == "__main__":
     draw_btc_price_data()
-

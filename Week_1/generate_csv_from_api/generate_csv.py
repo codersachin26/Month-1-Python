@@ -21,8 +21,8 @@ def get_object_list(entry_size=40, is_flatten=True):
     object_ids = get_object_ids(OBJECT_IDS_ENDPOINT)
     object_list = []
 
-    for id in object_ids[:entry_size]:
-        object_data = get_object_by_id(OBJECT_ENDPOINT, id)
+    for object_id in object_ids[:entry_size]:
+        object_data = get_object_by_id(OBJECT_ENDPOINT, object_id)
         if is_flatten:
             flatten_object = flatten(object_data)
             object_list.append(flatten_object)
@@ -42,8 +42,8 @@ def get_object_ids(api_endpoint):
 
 
 # return object by id from API
-def get_object_by_id(api_endpoint, id):
-    res = requests.get(api_endpoint + str(id))
+def get_object_by_id(api_endpoint, object_id):
+    res = requests.get(api_endpoint + str(object_id))
 
     if res.status_code == 200:
         res_body = json.loads(res.text)
