@@ -1,10 +1,22 @@
+"""
+generate_pdf.py, It's generate Pdf file from met museum api data.
+        There is one function:
+            1. generate_pdf:
+                    get the list of met museum data from the get_object_list function
+                    and generate pdf file from that data using pdfKit lib.
+
+    @author: sachin@codeops.tech
+"""
+
 import pandas as pd
 import pdfkit
 
 from Week_1.generate_csv_from_api.generate_csv import get_object_list
 
+# pdf file name
 PDF_FILE_NAME = "generated_metmuseum_objects_table.pdf"
 
+# pdf page size configuration for pdfKit lib.
 options = {
     'page-height': '300',
     'page-width': '900',
@@ -12,6 +24,13 @@ options = {
 
 
 def generate_pdf():
+    """
+     get the met museum data from get_object_list function
+     and create a DataFrame using Pandas,
+     convert DataFrame data to html string via using to_html method and
+     then generate pdf from that html string by using pdfKit lib.
+
+     """
     object_list = get_object_list()
     df = pd.DataFrame(object_list)
     df_html = df.to_html()
