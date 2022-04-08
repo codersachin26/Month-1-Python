@@ -1,0 +1,4 @@
+2022-04-08 20:17:18,157 : INFO -> start generate_csv() func
+2022-04-08 20:17:18,157 : INFO -> start get_object_list() func
+2022-04-08 20:17:18,157 : INFO -> start get_object_ids() func
+2022-04-08 20:17:18,157 : INFO -> call api endpoint : https://collectionapi.metmuseum.org/public/collection/v1/objects

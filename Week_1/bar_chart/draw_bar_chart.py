@@ -16,6 +16,13 @@ import matplotlib.pyplot as plt
 import requests
 import json
 from Week_1.pie_chart.draw_pie_chart import API_ENDPOINT
+import logging
+
+# logger configuration
+LOG_FILE_NAME = "draw_bar_chart.log"
+LEVEL = logging.INFO
+FORMAT = '%(asctime)s : %(levelname)s -> %(message)s'
+
 
 
 def draw_bar_chart(data, label):
@@ -37,11 +44,14 @@ def draw_bar_chart(data, label):
     None
 
     """
+    logging.info('start draw_bar_chart function')
     plt.xlabel("Crypto Name")
     plt.ylabel("Volume in Billions")
     plt.title("Top 10 High Crypto Volume Data")
+    logging.info('added plotting attributes - xlable, ylable, title ')
     plt.bar(data, label)
     plt.show()
+    logging.info('end draw_bar_chart function')
 
 
 def draw_crypto_volume(size=10):
@@ -62,7 +72,15 @@ def draw_crypto_volume(size=10):
     None
 
     """
+    logging.info('start draw_crypto_volume function')
+    logging.info(f'call API endpoint : {API_ENDPOINT}')
     res = requests.get(API_ENDPOINT)
+
+    if res.status_code == 200:
+        logging.info(f'API response status code: {res.status_code}')
+    else:
+        logging.error(f'api response status : {res.status_code}')
+
     cryptos = json.loads(res.text)
     labels = []
     volumes = []
@@ -77,8 +95,16 @@ def draw_crypto_volume(size=10):
         if i == size:
             break
 
+    logging.info('call draw_bar_chart with labels and volume data')
+
     draw_bar_chart(labels, volumes)
+    logging.info('end draw_crypto_volume function')
 
 
 if __name__ == "__main__":
+    logging.basicConfig(filename=LOG_FILE_NAME,
+                        level=LEVEL,
+                        format=FORMAT,
+                        filemode='w'
+                        )
     draw_crypto_volume()

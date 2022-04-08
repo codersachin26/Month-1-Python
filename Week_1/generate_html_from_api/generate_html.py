@@ -7,10 +7,22 @@ generate_html.py, It's generate Html file from api data.
 
     @author: sachin@codeops.tech
 """
+import logging
+import os
 
 import pandas as pd
 from Week_1.generate_csv_from_api.generate_csv import get_object_list
 
+# logger configuration
+LOG_FILE_NAME = "generate_html.log"
+LEVEL = logging.INFO
+FORMAT = '%(asctime)s : %(levelname)s -> %(message)s'
+
+logging.basicConfig(filename=LOG_FILE_NAME,
+                    level=LEVEL,
+                    format=FORMAT,
+                    filemode='w'
+                    )
 # html file name
 HTML_FILE_NAME = "generated_metmuseum_objects_table.html"
 
@@ -22,13 +34,19 @@ def generate_html():
     add <img> tag to the primaryImage & primaryImageSmall column
     and call the pandas DataFrame method to_html to create Html file.
     """
+
+    logging.info('start generate_html() func')
     object_list = get_object_list()
+    logging.info('get called get_object_list() func ')
+    logging.info(f'get_object_list() func return : {object_list}')
     df = pd.DataFrame(object_list)
     df['primaryImage'] = df['primaryImage'].apply(
         lambda url: f'<img src="{url}" height="100" width="100">' if url != '' else '')
     df['primaryImageSmall'] = df['primaryImageSmall'].apply(
         lambda url: f'<img src="{url}" height="100" width="100">' if url != '' else '')
     df.to_html(HTML_FILE_NAME, escape=False)
+    logging.info(f'generated Html file to {os.path.join(os.getcwd(), HTML_FILE_NAME)}')
+    logging.info('end generate_html() func')
 
 
 if __name__ == "__main__":

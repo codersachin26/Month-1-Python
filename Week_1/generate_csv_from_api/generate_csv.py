@@ -30,6 +30,14 @@ import json
 import requests
 from flatten_json import flatten
 import pandas as pd
+import logging
+import os
+
+# logger configuration
+LOG_FILE_NAME = "generate_csv.log"
+LEVEL = logging.INFO
+FORMAT = '%(asctime)s : %(levelname)s -> %(message)s'
+
 
 # API endpoints
 OBJECT_IDS_ENDPOINT = "https://collectionapi.metmuseum.org/public/collection/v1/objects"
@@ -45,9 +53,14 @@ def generate_csv():
     get_object_list function return the met museum api data.
 
     """
+    logging.info('start generate_csv() func')
     object_list = get_object_list()
+    logging.info('get called get_object_list() func ')
+    logging.info(f'get_object_list() func return : {object_list}')
     df = pd.DataFrame(object_list)
     df.to_csv(CSV_FILE_NAME, index=False)
+    logging.info(f'generated CSV file to {os.path.join(os.getcwd(),CSV_FILE_NAME)}')
+    logging.info('end generate_csv()')
 
 
 def get_object_list(entry_size=40, is_flatten=True):
@@ -71,11 +84,14 @@ def get_object_list(entry_size=40, is_flatten=True):
     list of met museum objects.
 
     """
+    logging.info('start get_object_list() func')
     object_ids = get_object_ids(OBJECT_IDS_ENDPOINT)
+    logging.info(f'get called get_object_ids() func with api Endpoint : {OBJECT_IDS_ENDPOINT} ')
     object_list = []
 
     for object_id in object_ids[:entry_size]:
         object_data = get_object_by_id(OBJECT_ENDPOINT, object_id)
+        logging.info(f'get called get_object_by_id() func with api Endpoint : {OBJECT_ENDPOINT} & Id : {object_id}')
         if is_flatten:
             flatten_object = flatten(object_data)
             object_list.append(flatten_object)
@@ -100,11 +116,16 @@ def get_object_ids(api_endpoint):
     list of met museum ids.
 
     """
+    logging.info('start get_object_ids() func')
+    logging.info(f'call api endpoint : {api_endpoint}')
     res = requests.get(api_endpoint)
+    logging.info(f'api response status : {res.status_code}')
     if res.status_code == 200:
         res_body = json.loads(res.text)
         object_ids = res_body['objectIDs']
         return object_ids
+    else:
+        logging.error(f'api response status : {res.status_code}')
 
 
 # return object by id from API
@@ -125,12 +146,22 @@ def get_object_by_id(api_endpoint, object_id):
     met museum object.
 
     """
+    logging.info('start get_object_by_id() func')
+    logging.info(f'call api endpoint : {api_endpoint} with Id : {object_id}')
     res = requests.get(api_endpoint + str(object_id))
+    logging.info(f'api response status : {res.status_code}')
 
     if res.status_code == 200:
         res_body = json.loads(res.text)
         return res_body
+    else:
+        logging.error(f'api response status : {res.status_code}')
 
 
 if __name__ == "__main__":
+    logging.basicConfig(filename=LOG_FILE_NAME,
+                        level=LEVEL,
+                        format=FORMAT,
+                        filemode='w'
+                        )
     generate_csv()

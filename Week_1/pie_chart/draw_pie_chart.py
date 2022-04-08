@@ -11,10 +11,15 @@
 
  @author: sachin@codeops.tech
 """
-
+import logging
 import matplotlib.pyplot as plt
 import requests
 import json
+
+# logger configuration
+LOG_FILE_NAME = "draw_pie_chart.log"
+LEVEL = logging.INFO
+FORMAT = '%(asctime)s : %(levelname)s -> %(message)s'
 
 API_ENDPOINT = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false"
 
@@ -32,6 +37,8 @@ def draw_pie_chart(data, labels):
         crypto name
 
     """
+
+    logging.info('called draw_pie_chart() func')
     plt.pie(data, labels=labels, autopct='% 1.1f %%', shadow=True)
     plt.legend(title='Cryptos name')
     plt.title("Cryptos Market Cap in 2022")
@@ -54,7 +61,14 @@ def draw_crypto_market_cap(size=7):
     None
 
     """
+    logging.info(f'hit api call endpoint : {API_ENDPOINT}')
     res = requests.get(API_ENDPOINT)
+
+    if res.status_code == 200:
+        logging.info(f'API response status code: {res.status_code}')
+    else:
+        logging.error(f'api response status : {res.status_code}')
+
     cryptos = json.loads(res.text)
     labels = []
     market_caps = []
@@ -72,4 +86,9 @@ def draw_crypto_market_cap(size=7):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(filename=LOG_FILE_NAME,
+                        level=LEVEL,
+                        format=FORMAT,
+                        filemode='w'
+                        )
     draw_crypto_market_cap()

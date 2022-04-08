@@ -11,6 +11,7 @@
 
  @author: sachin@codeops.tech
 """
+import logging
 
 import matplotlib.pyplot as plt
 import requests
@@ -31,11 +32,13 @@ def draw_line_chart(data):
 
     """
 
+    logging.info('start draw_line_chart function')
     plt.xlabel("Days")
     plt.ylabel("Price")
     plt.plot(data)
     plt.legend(title='Bitcoin')
     plt.show()
+    logging.info('end draw_line_chart function')
 
 
 def draw_btc_price_data():
@@ -44,15 +47,25 @@ def draw_btc_price_data():
     call the draw_line_chart function with response data.
 
     """
+
+    logging.info('start draw_btc_price_data function')
+    logging.info(f'call API endpoint : {API_ENDPOINT}')
     res = requests.get(API_ENDPOINT)
     btc_data = json.loads(res.text)
     print(json.dumps(btc_data))
     btc_prices = []
 
+    if res.status_code == 200:
+        logging.info(f'API response status code: {res.status_code}')
+    else:
+        logging.error(f'api response status : {res.status_code}')
+
     for price in btc_data.get('prices'):
         btc_prices.append(price[1])
 
     draw_line_chart(btc_prices)
+    logging.info('call draw_line_chart with btc_prices')
+    logging.info('end draw_btc_price_data function')
 
 
 if __name__ == "__main__":
