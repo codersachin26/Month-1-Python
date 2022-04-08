@@ -1,5 +1,5 @@
 """
-    generate_csv.py, It is used to create csv file from met museum API objects data.
+    generate_csv.py, It's used to create csv file from met museum API objects data.
 
     There are four functions:
                 1. generate_csv:
@@ -22,6 +22,7 @@
 
 
   @author: sachin@codeops.tech
+
 """
 
 
