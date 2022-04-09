@@ -1,0 +1,15 @@
+2022-04-09 22:22:14,846 : INFO -> start draw_multi_line_chart() func
+2022-04-09 22:22:14,846 : INFO -> start get_cryptos_price_data() func
+2022-04-09 22:22:14,846 : INFO -> call api endpoint : https://api.coingecko.com/api/v3/coins/bitcoin-cash/market_chart?vs_currency=usd&days=100&interval=daily
+2022-04-09 22:22:15,800 : INFO -> API response status code: 200
+2022-04-09 22:22:15,802 : INFO -> call api endpoint : https://api.coingecko.com/api/v3/coins/cardano/market_chart?vs_currency=usd&days=100&interval=daily
+2022-04-09 22:22:16,824 : INFO -> API response status code: 200
+2022-04-09 22:22:16,828 : INFO -> call api endpoint : https://api.coingecko.com/api/v3/coins/ripple/market_chart?vs_currency=usd&days=100&interval=daily
+2022-04-09 22:22:17,643 : INFO -> API response status code: 200
+2022-04-09 22:22:17,645 : INFO -> call api endpoint : https://api.coingecko.com/api/v3/coins/solana/market_chart?vs_currency=usd&days=100&interval=daily
+2022-04-09 22:22:18,871 : INFO -> API response status code: 200
+2022-04-09 22:22:18,874 : INFO -> call api endpoint : https://api.coingecko.com/api/v3/coins/terra-luna/market_chart?vs_currency=usd&days=100&interval=daily
+2022-04-09 22:22:20,101 : INFO -> API response status code: 200
+2022-04-09 22:22:20,103 : INFO -> call api endpoint : https://api.coingecko.com/api/v3/coins/litecoin/market_chart?vs_currency=usd&days=100&interval=daily
+2022-04-09 22:22:21,051 : INFO -> API response status code: 200
+2022-04-09 22:22:21,051 : INFO -> get_cryptos_price_data() func get called with cryptos Ids : ['bitcoin-cash', 'cardano', 'ripple', 'solana', 'terra-luna', 'litecoin']

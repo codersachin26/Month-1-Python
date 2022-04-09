@@ -18,7 +18,7 @@ import json
 
 
 # logger configuration
-LOG_FILE_NAME = "draw_line_chart.log"
+LOG_FILE_NAME = "multi_line_chart.log"
 LEVEL = logging.INFO
 FORMAT = '%(asctime)s : %(levelname)s -> %(message)s'
 

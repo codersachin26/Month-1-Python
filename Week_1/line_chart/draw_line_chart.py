@@ -17,6 +17,12 @@ import matplotlib.pyplot as plt
 import requests
 import json
 
+
+# logger configuration
+LOG_FILE_NAME = "draw_line_chart.log"
+LEVEL = logging.INFO
+FORMAT = '%(asctime)s : %(levelname)s -> %(message)s'
+
 API_ENDPOINT = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=100&interval=daily"
 
 
@@ -69,4 +75,9 @@ def draw_btc_price_data():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(filename=LOG_FILE_NAME,
+                        level=LEVEL,
+                        format=FORMAT,
+                        filemode='w'
+                        )
     draw_btc_price_data()

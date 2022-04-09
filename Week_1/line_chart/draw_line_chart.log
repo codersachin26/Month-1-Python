@@ -1,0 +1,8 @@
+2022-04-09 22:22:01,607 : INFO -> start draw_btc_price_data function
+2022-04-09 22:22:01,607 : INFO -> call API endpoint : https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=100&interval=daily
+2022-04-09 22:22:03,310 : INFO -> API response status code: 200
+2022-04-09 22:22:03,310 : INFO -> start draw_line_chart function
+2022-04-09 22:22:04,216 : WARNING -> No handles with labels found to put in legend.
+2022-04-09 22:22:06,657 : INFO -> end draw_line_chart function
+2022-04-09 22:22:06,658 : INFO -> call draw_line_chart with btc_prices
+2022-04-09 22:22:06,658 : INFO -> end draw_btc_price_data function

@@ -24,7 +24,6 @@ LEVEL = logging.INFO
 FORMAT = '%(asctime)s : %(levelname)s -> %(message)s'
 
 
-
 def draw_bar_chart(data, label):
     """
     draw the bar chart by using data & label args
