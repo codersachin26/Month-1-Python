@@ -16,6 +16,7 @@ import logging
 import matplotlib.pyplot as plt
 import requests
 import json
+from Week_1.bar_chart.draw_bar_chart import is_list_of
 
 
 # logger configuration
@@ -38,14 +39,19 @@ def draw_hist_chart(data):
         crypto price data.
 
     """
-    logging.info('start draw_hist_chart function')
+
+    if not is_list_of(int, data):
+        logging.error(f'draw_hist_chart(data: list[int]) get called with wrong data type data: {data}')
+        return -1
+
     plt.xlabel("Days")
     plt.ylabel("frequency")
     plt.title("Litecoin Price Frequency")
     plt.hist(data, label='Litecoin')
     plt.legend()
     plt.show()
-    logging.info('end draw_hist_chart function')
+    logging.info('end draw_hist_chart() function')
+
 
 
 def draw_litecoin_price_data():
@@ -55,22 +61,27 @@ def draw_litecoin_price_data():
 
     """
     logging.info('start draw_litecoin_price_data function')
-    logging.info(f'call API endpoint : {API_ENDPOINT}')
-    res = requests.get(API_ENDPOINT)
+    logging.debug(f'call API endpoint : {API_ENDPOINT}')
+
+    try:
+        res = requests.get(API_ENDPOINT)
+    except requests.exceptions.RequestException as e:
+        logging.error(f'api call failed {e}')
+        return
+
     litecoin_data = json.loads(res.text)
     litecoin_data_prices = []
 
     if res.status_code == 200:
-        logging.info(f'API response status code: {res.status_code}')
+        logging.debug(f'API response status code: {res.status_code}')
     else:
-        logging.error(f'api response status : {res.status_code}')
+        logging.error(f'api response status code: {res.status_code}')
 
     # storing Litecoin prices
     for price in litecoin_data.get('prices'):
         litecoin_data_prices.append(price[1])
 
     draw_hist_chart(litecoin_data_prices)
-    logging.info('call draw_hist_chart with litecoin_data_prices')
     logging.info('end draw_litecoin_price_data function')
 
 

@@ -1,3 +1,2 @@
-2022-04-08 21:39:38,527 : INFO -> hit api call endpoint : https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false
-2022-04-08 21:39:40,535 : INFO -> API response status code: 200
-2022-04-08 21:39:40,537 : INFO -> called draw_pie_chart() func
+2022-04-12 09:56:53,432 : INFO -> end draw_pie_chart() func
+2022-04-12 09:56:53,432 : INFO -> end draw_crypto_market_cap() func

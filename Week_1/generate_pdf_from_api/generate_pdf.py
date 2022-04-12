@@ -48,12 +48,19 @@ def generate_pdf():
 
     logging.info('start generate_pdf() func')
     object_list = get_object_list()
-    logging.info('get called get_object_list() func ')
-    logging.info(f'get_object_list() func return : {object_list}')
+
+    if object_list == -1:
+        logging.debug('get_object_list() func call failed, return -1')
+        return
+
+    logging.debug(f'get_object_list() func call return : {object_list}')
+
     df = pd.DataFrame(object_list)
+    logging.debug('object_list converted to DataFrame df object')
+
     df_html = df.to_html()
     pdfkit.from_string(df_html, PDF_FILE_NAME, options=options)
-    logging.info(f'generated pdf file to {os.path.join(os.getcwd(), PDF_FILE_NAME)}')
+    logging.debug(f'generated pdf file to {os.path.join(os.getcwd(), PDF_FILE_NAME)}')
     logging.info('end generate_pdf() func')
 
 

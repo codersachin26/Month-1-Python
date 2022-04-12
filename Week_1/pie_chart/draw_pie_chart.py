@@ -17,6 +17,8 @@ import requests
 import json
 
 # logger configuration
+from Week_1.bar_chart.draw_bar_chart import is_list_of
+
 LOG_FILE_NAME = "draw_pie_chart.log"
 LEVEL = logging.INFO
 FORMAT = '%(asctime)s : %(levelname)s -> %(message)s'
@@ -33,16 +35,21 @@ def draw_pie_chart(data, labels):
     data : list of int
         cryptos market cap data.
 
-    labels : str
+    labels : list of str
         crypto name
 
     """
 
-    logging.info('called draw_pie_chart() func')
+    if not is_list_of(int, data) or not is_list_of(str, labels):
+        logging.error(f'draw_pie_chart(data: list[int],labels: list[str]) get called with wrong data type data: {data}, label: {labels}')
+        return -1
+
     plt.pie(data, labels=labels, autopct='% 1.1f %%', shadow=True)
     plt.legend(title='Cryptos name')
     plt.title("Cryptos Market Cap in 2022")
     plt.show()
+
+    logging.info('end draw_pie_chart() func')
 
 
 def draw_crypto_market_cap(size=7):
@@ -61,13 +68,19 @@ def draw_crypto_market_cap(size=7):
     None
 
     """
-    logging.info(f'hit api call endpoint : {API_ENDPOINT}')
-    res = requests.get(API_ENDPOINT)
+
+    try:
+        res = requests.get(API_ENDPOINT)
+        logging.debug(f'hit api call endpoint : {API_ENDPOINT}')
+    except requests.exceptions.RequestException as e:
+        logging.error(f'api call failed {e}')
+        return
 
     if res.status_code == 200:
-        logging.info(f'API response status code: {res.status_code}')
+        logging.debug(f'API response status code: {res.status_code}')
     else:
-        logging.error(f'api response status : {res.status_code}')
+        logging.error(f'api response status code : {res.status_code}')
+        return
 
     cryptos = json.loads(res.text)
     labels = []
@@ -83,6 +96,7 @@ def draw_crypto_market_cap(size=7):
             break
 
     draw_pie_chart(market_caps,  labels)
+    logging.info('end draw_crypto_market_cap() func')
 
 
 if __name__ == "__main__":

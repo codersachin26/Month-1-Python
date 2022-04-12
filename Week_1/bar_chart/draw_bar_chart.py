@@ -15,13 +15,25 @@
 import matplotlib.pyplot as plt
 import requests
 import json
-from Week_1.pie_chart.draw_pie_chart import API_ENDPOINT
 import logging
+
+
+API_ENDPOINT = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false"
+
 
 # logger configuration
 LOG_FILE_NAME = "draw_bar_chart.log"
-LEVEL = logging.INFO
-FORMAT = '%(asctime)s : %(levelname)s -> %(message)s'
+LEVEL = logging.DEBUG
+FORMAT = '[%(asctime)s] : %(levelname)s -> %(message)s'
+
+
+# check type of list elements
+def is_list_of(element_type, list_elements):
+    for list_element in list_elements:
+        if not isinstance(list_element, element_type):
+            return False
+    else:
+        return True
 
 
 def draw_bar_chart(data, label):
@@ -43,14 +55,19 @@ def draw_bar_chart(data, label):
     None
 
     """
-    logging.info('start draw_bar_chart function')
+
+    if not is_list_of(int, data) or not is_list_of(str, label):
+        logging.error(f'draw_bar_chart() get called with wrong data type data: {data}, label: {label}')
+        return -1
+
     plt.xlabel("Crypto Name")
     plt.ylabel("Volume in Billions")
     plt.title("Top 10 High Crypto Volume Data")
-    logging.info('added plotting attributes - xlable, ylable, title ')
-    plt.bar(data, label)
+    plt.bar(label, data)
     plt.show()
-    logging.info('end draw_bar_chart function')
+
+    logging.debug('draw_bar_chart() function, successfully draw bar chart')
+    logging.debug('end draw_bar_chart() function')
 
 
 def draw_crypto_volume(size=10):
@@ -71,16 +88,36 @@ def draw_crypto_volume(size=10):
     None
 
     """
-    logging.info('start draw_crypto_volume function')
-    logging.info(f'call API endpoint : {API_ENDPOINT}')
-    res = requests.get(API_ENDPOINT)
+
+    if not isinstance(size, int):
+        logging.error(
+            f'draw_crypto_volume(size: int) get called with wrong data type, expected size: int but got {type(size)}')
+        return
+
+    logging.debug(f'draw_crypto_volume() get called with size: {size}')
+    logging.debug(f'call API endpoint : {API_ENDPOINT}')
+
+    try:
+        res = requests.get(API_ENDPOINT)
+    except requests.exceptions.RequestException as e:
+        logging.error(f'api call failed {e}')
+        return
 
     if res.status_code == 200:
-        logging.info(f'API response status code: {res.status_code}')
+        logging.debug(f'API response status code: {res.status_code}')
     else:
-        logging.error(f'api response status : {res.status_code}')
+        logging.debug(f'api response status : {res.status_code}')
+        return
 
-    cryptos = json.loads(res.text)
+    logging.debug(f'api response Json: {res.text}')
+
+    try:
+        cryptos = json.loads(res.text)
+        logging.debug(f'api response converted into python object ResponseObject: {cryptos}')
+    except json.decoder.JSONDecodeError as err:
+        logging.error(f'json.loads() failed to parse response, Error: {repr(err)}')
+        return -1
+
     labels = []
     volumes = []
 
@@ -94,10 +131,8 @@ def draw_crypto_volume(size=10):
         if i == size:
             break
 
-    logging.info('call draw_bar_chart with labels and volume data')
-
-    draw_bar_chart(labels, volumes)
-    logging.info('end draw_crypto_volume function')
+    draw_bar_chart(volumes, labels)
+    logging.info('draw_crypto_volume() func, successfully executed')
 
 
 if __name__ == "__main__":

@@ -37,11 +37,15 @@ def generate_excel():
     """
     logging.info('start generate_excel() func')
     object_list = get_object_list()
-    logging.info('get called get_object_list() func ')
-    logging.info(f'get_object_list() func return : {object_list}')
+
+    if object_list == -1:
+        logging.debug('get_object_list() func call failed, return -1')
+        return
+
+    logging.debug(f'get_object_list() func return : {object_list}')
     df = pd.DataFrame(object_list)
     df.to_excel(EXCEL_FILE_NAME, index=False)
-    logging.info(f'generated Excel file to {os.path.join(os.getcwd(), EXCEL_FILE_NAME)}')
+    logging.debug(f'generated Excel file to {os.path.join(os.getcwd(), EXCEL_FILE_NAME)}')
     logging.info('end generate_excel() func')
 
 

@@ -37,15 +37,25 @@ def generate_html():
 
     logging.info('start generate_html() func')
     object_list = get_object_list()
-    logging.info('get called get_object_list() func ')
-    logging.info(f'get_object_list() func return : {object_list}')
+
+    if object_list == -1:
+        logging.debug('get_object_list() func call failed, return -1')
+        return
+
+    logging.debug(f'get_object_list() func return : {object_list}')
     df = pd.DataFrame(object_list)
+    logging.debug('object_list converted to DataFrame df object')
+
     df['primaryImage'] = df['primaryImage'].apply(
         lambda url: f'<img src="{url}" height="100" width="100">' if url != '' else '')
+    logging.debug('converted df primaryImage column values to <img> tag')
+
     df['primaryImageSmall'] = df['primaryImageSmall'].apply(
         lambda url: f'<img src="{url}" height="100" width="100">' if url != '' else '')
+    logging.debug('converted df primaryImageSmall column values to <img> tag')
+
     df.to_html(HTML_FILE_NAME, escape=False)
-    logging.info(f'generated Html file to {os.path.join(os.getcwd(), HTML_FILE_NAME)}')
+    logging.debug(f'generated Html file to {os.path.join(os.getcwd(), HTML_FILE_NAME)}')
     logging.info('end generate_html() func')
 
 

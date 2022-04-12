@@ -39,12 +39,24 @@ def generate_xml():
 
     logging.info('start generate_xml() func')
     object_list = get_object_list(is_flatten=False)
-    logging.info('get called get_object_list() func ')
-    logging.info(f'get_object_list() func return : {object_list}')
+
+    if object_list == -1:
+        logging.debug('get_object_list() func call failed, return -1')
+        return
+
+    logging.info(f'get_object_list() func call return : {object_list}')
     xml_data = dicttoxml(object_list, attr_type=False)
+    logging.debug('dicttoxml() func get called with object_list and generate xml bytes')
     formatted_xml_data = parseString(xml_data).toprettyxml()
-    logging.info(f'generated xml string : {formatted_xml_data}')
-    xml_file = open(XML_FILE_NAME, 'w')
+    logging.debug(f'generated xml string : {formatted_xml_data}')
+
+    try:
+        xml_file = open(XML_FILE_NAME, 'w')
+        logging.debug(f'successfully open {XML_FILE_NAME} file')
+    except OSError as err:
+        logging.debug(f'OS error occurred trying to open {XML_FILE_NAME}, Error: {err}')
+        return
+
     xml_file.write(formatted_xml_data)
     logging.info(f'generated xml file at {os.path.join(os.getcwd(),XML_FILE_NAME)}')
 
