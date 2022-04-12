@@ -40,7 +40,7 @@ def draw_hist_chart(data):
 
     """
 
-    if not is_list_of(int, data):
+    if not is_list_of(float, data):
         logging.error(f'draw_hist_chart(data: list[int]) get called with wrong data type data: {data}')
         return -1
 

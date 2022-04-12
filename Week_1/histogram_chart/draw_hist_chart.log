@@ -1,7 +1,3 @@
-2022-04-08 21:38:37,069 : INFO -> start draw_litecoin_price_data function
-2022-04-08 21:38:37,069 : INFO -> call API endpoint : https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=100&interval=daily
-2022-04-08 21:38:37,965 : INFO -> API response status code: 200
-2022-04-08 21:38:37,966 : INFO -> start draw_hist_chart function
-2022-04-08 21:38:43,963 : INFO -> end draw_hist_chart function
-2022-04-08 21:38:43,963 : INFO -> call draw_hist_chart with litecoin_data_prices
-2022-04-08 21:38:43,964 : INFO -> end draw_litecoin_price_data function
+2022-04-12 15:02:29,338 : INFO -> start draw_litecoin_price_data function
+2022-04-12 15:02:56,634 : INFO -> end draw_hist_chart() function
+2022-04-12 15:02:56,635 : INFO -> end draw_litecoin_price_data function
