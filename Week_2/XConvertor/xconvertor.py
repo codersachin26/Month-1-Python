@@ -8,17 +8,27 @@ import pdfkit
 
 
 class XConvertor:
+    """
+    XConvertor class is used to generate csv,xml,excel,pdf and xlsx files,
+    from dict objects.
+    """
     def __init__(self, data):
         self.data = data
         self.file_Name = "x_convertor"
 
     def to_csv(self):
+        """
+        create csv file from data object using pandas.
+        """
         csv_file_name = f'{self.file_Name}.csv'
         flatten_objects = self.to_flatten()
         df = pd.DataFrame(flatten_objects)
         df.to_csv(csv_file_name, index=False)
 
     def to_html(self):
+        """
+        create html file from data object using pandas.
+        """
         html_file_name = f'{self.file_Name}.html'
         flatten_objects = self.to_flatten()
         df = pd.DataFrame(flatten_objects)
@@ -31,6 +41,9 @@ class XConvertor:
         df.to_html(html_file_name, escape=False)
 
     def to_xml(self):
+        """
+        create xml file from data object using dicttoxml.
+        """
         xml_file_name = f'{self.file_Name}.xml'
         objects = self.data
         xml_data = dicttoxml(objects, attr_type=False)
@@ -46,13 +59,18 @@ class XConvertor:
         xml_file.write(formatted_xml_data)
 
     def to_excel(self):
+        """
+         create excel file from data object using pandas.
+        """
         excel_file_name = f'{self.file_Name}.xlsx'
         object_list = self.to_flatten()
         df = pd.DataFrame(object_list)
         df.to_excel(excel_file_name, index=False)
 
     def to_pdf(self):
-
+        """
+         create pdf file from data object using pdfkit.
+        """
         # pdf page size configuration for pdfKit lib.
         options = {
             'page-height': '300',
