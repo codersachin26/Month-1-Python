@@ -51,12 +51,13 @@ class XConvertor:
 
         try:
             xml_file = open(xml_file_name, 'w')
+            xml_file.write(formatted_xml_data)
+            xml_file.close()
             logging.debug(f'successfully open {xml_file_name} file')
         except OSError as err:
             logging.debug(f'OS error occurred trying to open {xml_file_name}, Error: {err}')
             return
 
-        xml_file.write(formatted_xml_data)
 
     def to_excel(self):
         """
