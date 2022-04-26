@@ -1,5 +1,3 @@
-import csv
-import io
 import logging
 
 from flask import Flask, request, make_response, jsonify, render_template
@@ -90,14 +88,14 @@ def insert_rows(table_name):
 
     if db_conn.check_table_exist(table_name):
         try:
-            db_conn.insert_into_table(table_name,rows)
+            db_conn.insert_into_table(table_name, rows)
             logging.debug(f'rows added to {table_name} table')
             res = f'successfully inserted rows to {table_name} table'
         except mySql_connector.errors.OperationalError as err:
             logging.error(f"can't insert rows to {table_name} table, Error: {repr(err)}")
-            res = jsonify({'message':f"can't insert rows to {table_name} table"})
+            res = jsonify({'message': f"can't insert rows to {table_name} table"})
     else:
-        res = jsonify({'message':f"{table_name} table not exist"})
+        res = jsonify({'message': f"{table_name} table not exist"})
         logging.error(f"{table_name} table not exist")
 
     db_conn.close_conn()
@@ -117,7 +115,8 @@ def read_rows(table_name):
     if rows_data != -1:
         res = jsonify(rows_data)
     else:
-        res = f'something wrong,can not read from {table_name} table'
+        msg = f'something wrong,can not read from {table_name} table'
+        res = {"msg": msg}
 
     db_conn.close_conn()
 
@@ -132,16 +131,16 @@ def delete_rows(table_name, item_id):
         logging.error(msg)
         return make_response(msg)
 
-    if db_conn.delete_row(table_name,item_id) != -1:
+    if db_conn.delete_row(table_name, item_id) != -1:
         res = f'row deleted from {table_name} table'
     else:
         res = f'row did not deleted from {table_name} table'
 
-    return make_response(jsonify({"msg":res}))
+    return make_response(jsonify({"msg": res}))
 
 
 @app.route('/update/<string:table_name>/<string:item_id>', methods=['PUT'])
-def update_rows(table_name,item_id):
+def update_rows(table_name, item_id):
     """
     update_rows() func, update single record in a table.
     """
@@ -152,9 +151,9 @@ def update_rows(table_name,item_id):
     if not db_conn.is_connected():
         msg = 'mysql server not connected'
         logging.error(msg)
-        return make_response(msg)
+        return make_response({"msg": msg})
 
-    if db_conn.update_row(table_name,item_id,json_data) == 1:
+    if db_conn.update_row(table_name, item_id, json_data) == 1:
         res = f'successfully updated record in {table_name} table'
         logging.info(res)
     else:
@@ -162,8 +161,6 @@ def update_rows(table_name,item_id):
         logging.error(res)
 
     return make_response(jsonify({"msg": res}))
-
-
 
 
 if __name__ == '__main__':

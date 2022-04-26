@@ -1,3 +1,7 @@
+"""
+sql_db.py, this module is use for sql database related tasks.
+"""
+
 import logging
 import time
 
@@ -9,7 +13,8 @@ from Week_3.helpers import csv_to_list
 
 class SqlDB:
     """
-    SqlDB class is responsible for creating connection,manipulating and updating data on MySql database.
+    SqlDB class is responsible for creating connection,manipulating
+     and updating data on MySql database.
     """
 
     def __init__(self, username, password, host, database):
@@ -18,7 +23,12 @@ class SqlDB:
         connect to mysql server and save the connection object.
         """
         try:
-            self._conn = mySql_connector.connect(user=username, password=password, host=host, database=database)
+            self._conn = mySql_connector.connect(
+                user=username,
+                password=password,
+                host=host,
+                database=database
+            )
             logging.info('connected to mysql server')
         except mySql_connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -26,28 +36,13 @@ class SqlDB:
             else:
                 logging.error(f"can't connect to MySql, Error: {repr(err)}")
 
-    def insert_rows(self, rows):
-        """
-        insert list of rows into crypto_data table.
-        """
-        cur = self._conn.cursor()
-        sql = "INSERT INTO crypto_data (id,symbol,name,image,current_price,market_cap,market_cap_rank,fully_diluted_valuation,total_volume,high_24h,low_24h,price_change_24h,price_change_percentage_24h,market_cap_change_24h,market_cap_change_percentage_24h,circulating_supply,total_supply,max_supply,ath,ath_change_percentage,ath_date,atl,atl_change_percentage,atl_date,roi,last_updated) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-
-        for row in rows:
-            try:
-                cur.execute(sql, row)
-            except mySql_connector.Error as err:
-                logging.error(f'sql query get failed {sql}, Error: {repr(err)}')
-                return -1
-
-        self._conn.commit()
-        self._conn.close()
-
-        logging.debug('inserted all rows to crypto_data table')
-
-        return 1
-
     def insert_from_csv(self, csv_file):
+        """
+        create a new table from csv file name and insert all csv file data to it.
+        :param csv_file: binary file
+        """
+
+        # convert csv binary file data to list of tuples
         csv_data = csv_to_list(csv_file)
 
         if csv_data == -1:
@@ -57,7 +52,7 @@ class SqlDB:
             columns = csv_data[0]
             rows = csv_data[1:]
 
-            # Check id column in csv file column list
+            # Check 'id' column in csv file exist or not
             if 'id' not in columns:
                 logging.error(f'{csv_file} file does not contain "id" column')
                 return -1
@@ -76,9 +71,11 @@ class SqlDB:
                     return -1
             else:
                 return -1
-        return 1
 
     def check_table_exist(self, table_name):
+        if table_name == "":
+            return False
+
         query = f"SHOW TABLES LIKE '%s'" % table_name
         db_cur = self._conn.cursor()
         db_cur.execute(query)
@@ -90,7 +87,8 @@ class SqlDB:
             return True
 
     def create_table(self, table_name, columns):
-        query = f"CREATE TABLE {table_name} ( id varchar(100) PRIMARY KEY," + " varchar(100),".join(columns) + " varchar(100) )"
+        query = f"CREATE TABLE {table_name} ( id varchar(100) PRIMARY KEY," + " varchar(100),".join(
+            columns) + " varchar(100) )"
         cur = self._conn.cursor()
         try:
             cur.execute(query)
@@ -110,12 +108,16 @@ class SqlDB:
             cur.executemany(query, rows)
             self._conn.commit()
             logging.debug(f'inserted rows into {table_name}')
+            return 1
         except mySql_connector.Error as err:
             logging.error(f'sql query get failed {query}, Error: {repr(err)}')
-            raise mySql_connector.errors.OperationalError(msg=f"sql query failed {query}, Error: {err}")
+            return -1
 
-    def read_rows(self, table_name):
-        query = f"SELECT * FROM {table_name}"
+    def read_rows(self, table_name, item_id=None):
+        query = f"SELECT * FROM {table_name} "
+
+        if item_id is not None:
+            query += f"WHERE id='%s'" % item_id
 
         cur = self._conn.cursor()
 
@@ -178,7 +180,7 @@ class SqlDB:
             else:
                 logging.error(f'query get failed {query}')
         except mySql_connector.Error as err:
-            logging.error(f'can not execute query {query}, Error: {repr(err)}')
+            logging.error(f'query failed {query}, Error: {repr(err)}')
             return -1
 
     def is_connected(self):
@@ -189,6 +191,22 @@ class SqlDB:
             return False
         else:
             return True
+
+    def drop_table(self, table_name):
+        if self.check_table_exist(table_name):
+            query = f"DROP TABLE {table_name}"
+            cur = self._conn.cursor()
+            cur.execute(query)
+
+            if cur.rowcount > 0:
+                logging.debug(f'{table_name} table deleted successfully')
+                return 1
+            else:
+                logging.error(f'query get failed {query}, table not deleted')
+                return -1
+        else:
+            logging.error(f'{table_name} table already exist')
+            return -1
 
     def close_conn(self):
         """
